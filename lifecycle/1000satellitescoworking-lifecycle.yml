@@ -1,0 +1,54 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  https://1000satellites.de/wp-json route index, plus DNS and HTTP probes of the usual status/deprecation
+  surfaces on 2026-09-05.
+description: >-
+  1000 Satellites operates no API programme, so there is no API lifecycle to document — no versioning
+  policy, no deprecation policy, no SLA, no status page and no changelog. What versioning exists is
+  inherited from WordPress core. This file records those absences deliberately: a coworking operator that
+  never promised an API contract is not failing to keep one.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  policy_url: null
+  note: >-
+    The wp/v2 namespace version is set by WordPress core, not by 1000 Satellites. The company has made no
+    statement about how or whether it would version, freeze or migrate this surface, and an unannounced
+    WordPress or plugin upgrade can change it. A consumer should treat it as unversioned in practice.
+  other_namespaces_observed: 41
+  other_namespaces_note: >-
+    The route index advertises 41 namespaces, most of them third-party plugin surfaces (Elementor,
+    ElementsKit, WPML, Wordfence, Yoast, Borlabs Cookie, Listdom, Real Media Library, HubSpot leadin).
+    Their presence and shape follow the site's plugin roster and can change without notice.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header was returned on any observed response, and no deprecation
+    policy page exists. No `Deprecation` pointer is emitted.
+sla:
+  url: null
+  uptime_target: null
+  note: No SLA is published for any surface. The published membership terms cover workspace access, not
+    API availability.
+status_page:
+  url: null
+  probed:
+  - {host: status.1000satellites.de, dns: no-record}
+  note: >-
+    No status page. status.1000satellites.de has no DNS record, and no third-party status host
+    (Statuspage, Instatus, BetterStack) is linked from the site. No `StatusPage` pointer is emitted.
+changelog:
+  url: null
+  note: >-
+    No dated changelog for any API surface. The company publishes a news feed at
+    https://1000satellites.de/en/news/ — 28 posts as of 2026-09-05, covering new location openings and
+    company news — but it is editorial content, not a release log, so no `ChangeLog` pointer is emitted.
+deprecated_operations: []
+x-evidence:
+  fetched: '2026-09-05'
+  probes:
+  - {url: 'https://1000satellites.de/wp-json/wp/v2/posts?per_page=1', status: 200, sunset_header: false}
+  - {host: status.1000satellites.de, result: NXDOMAIN}

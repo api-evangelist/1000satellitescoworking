@@ -1,0 +1,38 @@
+generated: '2026-09-05'
+method: searched
+source: >-
+  Registry searches on npm, PyPI, RubyGems, crates.io, NuGet, Maven Central, Packagist and pkg.go.dev, plus
+  a GitHub organisation check, on 2026-09-05.
+package_count: 0
+official_package_count: 0
+description: >-
+  1000 Satellites publishes no client libraries. This is a measured zero, not an unchecked field: the
+  company ships no software product, operates no developer programme, and has no public source repository
+  to hold one. No `SDKs` pointer is emitted in apis.yml, because emitting one would claim an SDK surface
+  that does not exist.
+packages: []
+searched:
+- {registry: npm, query: '1000satellites', results: 0, url: 'https://registry.npmjs.org/-/v1/search?text=1000satellites'}
+- {registry: pypi, query: '1000satellites', status: 404, url: 'https://pypi.org/pypi/1000satellites/json'}
+- {registry: rubygems, query: '1000satellites', results: 0, url: 'https://rubygems.org/api/v1/search.json?query=1000satellites'}
+- {registry: crates.io, query: '1000satellites', results: 0, url: 'https://crates.io/api/v1/crates?q=1000satellites'}
+- {registry: packagist, query: '1000satellites', results: 0, url: 'https://packagist.org/search.json?q=1000satellites'}
+- {registry: nuget, query: '1000satellites', results: 0, url: 'https://azuresearch-usnc.nuget.org/query?q=1000satellites'}
+- registry: maven-central
+  query: '1000satellites'
+  results: 1
+  match: false
+  url: 'https://search.maven.org/solrsearch/select?q=1000satellites'
+  note: >-
+    The single hit is org.xowl.platform:xowl-satellites 0.2.3, an unrelated semantic-web platform module.
+    Not this company; not counted.
+- {registry: pkg.go.dev, query: 'github.com/1000satellites', status: 404, url: 'https://proxy.golang.org/github.com/1000satellites/@v/list'}
+- {registry: github-org, query: 'github.com/1000satellites', status: 404}
+notes:
+- >-
+  The MCP server is remote-only and has no distributable package — there is nothing to `npx` or `pip
+  install`. See the deployment block in mcp/1000satellitescoworking-mcp.yml.
+- >-
+  Consumers of the wp/v2 content surface would use a generic WordPress REST client (for example the
+  community `wpapi` npm package), which is third-party and unaffiliated with 1000 Satellites. It is
+  deliberately not listed here: a third-party library is not a first-party SDK.

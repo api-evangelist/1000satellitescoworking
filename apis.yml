@@ -1,18 +1,114 @@
 aid: 1000satellitescoworking
-name: 1000satellitescoworking
-description: '1000satellitescoworking is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+name: 1000 Satellites
+description: >-
+  1000 Satellites GmbH is a German flex-office and coworking operator founded in 2019 in Mannheim by Caro
+  Windlin, Markus Hummelsberger and Gregory von Abendroth as a spin-off of BASF's innovation unit Chemovator.
+  It converts underused office space from corporate real-estate portfolios into professionally operated,
+  decentralised "satellite" workspaces across the Rhein-Neckar region, Munich, Hamburg and Berlin, selling
+  day passes, monthly memberships, team tickets, fixed desks, meeting rooms and event space rather than a
+  software product. It is not a software vendor and publishes no product or developer API. Its machine-readable
+  surface is what the company's WordPress estate exposes on 1000satellites.de: an anonymously readable
+  WordPress REST content API (wp/v2) serving news posts, location and marketing pages, media and site search;
+  and — notably for a business of this kind — a live remote Model Context Protocol server published through
+  the WordPress MCP Adapter, advertised by real RFC 8414 OAuth authorization-server metadata and RFC 9728
+  protected-resource metadata, with tools/list authentication-gated.
 url: https://raw.githubusercontent.com/api-evangelist/1000satellitescoworking/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
+image: https://1000satellites.de/wp-content/uploads/2023/12/cropped-1000-Satellites-Coworking.jpg
 specificationVersion: '0.20'
 created: '2026-09-05'
 modified: '2026-09-05'
 tags:
 - Company
-apis: []
+- Coworking
+- Flexible Workspace
+- Real Estate
+- Office Space
+- Workplace
+- Meeting Rooms
+- Germany
+- Content
+- MCP
+tags_raw:
+- Company
+- Coworking
+- Flex Office
+- Real Estate
+- Office Space
+- Workplace
+- Meeting Rooms
+- Germany
+- Content
+- MCP
+apis:
+- aid: 1000satellitescoworking:mcp
+  name: 1000 Satellites MCP Server (WordPress MCP Adapter)
+  description: >-
+    A remote Model Context Protocol server served from the 1000satellites.de WordPress estate under the
+    "mcp" REST namespace. Two MCP routes are advertised in the route index — mcp-oauth-server and
+    mcp-adapter-default-server — and the apex domain publishes both RFC 8414 OAuth authorization-server
+    metadata and RFC 9728 protected-resource metadata naming mcp-oauth-server as the protected resource.
+    Authorization is OAuth 2.1 authorization-code with PKCE (S256), a single `mcp` scope, public clients
+    (token_endpoint_auth_method none) and client-ID metadata documents. The live tool set could not be
+    enumerated: an anonymous JSON-RPC initialize and tools/list both return HTTP 401 (mcp_unauthorized on
+    the OAuth server, rest_forbidden on the default adapter server), as does the companion
+    wp-abilities/v1 abilities registry that backs the tools.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - MCP
+  - Agents
+  properties:
+  - type: MCPServer
+    url: mcp/1000satellitescoworking-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/1000satellitescoworking-tool-crosswalk.yml
+  - type: OAuthScopes
+    url: scopes/1000satellitescoworking-scopes.yml
+  - type: Authentication
+    url: authentication/1000satellitescoworking-authentication.yml
+  x-evidence:
+    protected_resource: https://1000satellites.de/.well-known/oauth-protected-resource
+    authorization_server: https://1000satellites.de/.well-known/oauth-authorization-server
+    http_status: 200
+    tools_list_status: 401
+    fetched: '2026-09-05'
+- aid: 1000satellitescoworking:content-api
+  name: 1000 Satellites Content API (WordPress REST wp/v2)
+  description: >-
+    The anonymously readable WordPress REST content surface of 1000satellites.de. Ten resources returned
+    HTTP 200 to an unauthenticated request on 2026-09-05 — posts, pages, media, categories, tags, comments,
+    types, taxonomies, statuses and site search — covering the company news feed, its location and
+    marketing pages and its media library, in both German and English (the site runs WPML). This is the
+    CMS content API, not a product API: 1000 Satellites publishes no OpenAPI of its own, and the OpenAPI
+    linked here was derived mechanically from the route-discovery document at /wp-json/. Write operations
+    exist on these routes but require WordPress authentication and are not documented.
+  humanURL: https://1000satellites.de/en/news/
+  baseURL: https://1000satellites.de/wp-json
+  tags:
+  - Content
+  - News
+  - Media
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-content-api-openapi.yml
+  - type: Overlay
+    url: overlays/1000satellitescoworking-content-api-overlay.yaml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+  x-evidence:
+    route_index: https://1000satellites.de/wp-json
+    http_status: 200
+    fetched: '2026-09-05'
+    derived_note: >-
+      Derived from the provider's own route-discovery document; only resources verified to return 200
+      anonymously are included. x-provider-published is false in the spec's info block.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +116,84 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://equityzen.com/company/1000satellitescoworking
+  url: https://1000satellites.de/
+- type: Blog
+  url: https://1000satellites.de/en/news/
+- type: Support
+  url: https://1000satellites.de/kontakt/
+- type: FAQ
+  url: https://1000satellites.de/faq/
+- type: Pricing
+  url: https://1000satellites.de/preise
+- type: SignUp
+  url: https://1000satellites.de/buchung/
+- type: TermsOfService
+  url: https://1000satellites.de/agb/
+- type: PrivacyPolicy
+  url: https://1000satellites.de/datenschutz/
+- type: Imprint
+  url: https://1000satellites.de/impressum/
+- type: Careers
+  url: https://1000satellites.de/jobs/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/1000-satellites-coworking
+- type: WellKnown
+  url: well-known/1000satellitescoworking-well-known.yml
+- type: MCPServer
+  url: mcp/1000satellitescoworking-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/1000satellitescoworking-tool-crosswalk.yml
+- type: Authentication
+  url: authentication/1000satellitescoworking-authentication.yml
+- type: OAuthScopes
+  url: scopes/1000satellitescoworking-scopes.yml
+- type: DomainSecurity
+  url: security/1000satellitescoworking-domain-security.yml
+- type: Conformance
+  url: conformance/1000satellitescoworking-conformance.yml
+- type: ErrorCatalog
+  url: errors/1000satellitescoworking-problem-types.yml
+- type: Conventions
+  url: conventions/1000satellitescoworking-conventions.yml
+- type: Lifecycle
+  url: lifecycle/1000satellitescoworking-lifecycle.yml
+- type: DataModel
+  url: data-model/1000satellitescoworking-data-model.yml
+- type: Overlay
+  url: overlays/1000satellitescoworking-content-api-overlay.yaml
+- type: LLMsTxt
+  url: llms/1000satellitescoworking-llms.txt
+- type: Packages
+  url: packages/1000satellitescoworking-packages.yml
+- type: Plans
+  url: plans/1000satellitescoworking-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/1000satellitescoworking-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-09-05'
+  status: enriched
+  artifacts_added: 23
+  pass: local-v3
+x-coverage:
+  state: covered
+  reason: null
+  detail: >-
+    Contract discovery succeeded on a company that ships no software. 1000satellites.de serves RFC 8414 and
+    RFC 9728 discovery documents naming a live remote MCP server at /wp-json/mcp/mcp-oauth-server (OAuth
+    2.1 + PKCE, scope `mcp`, tools/list gated at 401), and its wp/v2 content surface is anonymously
+    readable across ten resources, from which a 19-operation OpenAPI was derived against the provider's own
+    route index.
+  evidence:
+  - url: https://1000satellites.de/.well-known/oauth-protected-resource
+    status: 200
+  - url: https://1000satellites.de/.well-known/oauth-authorization-server
+    status: 200
+  - url: https://1000satellites.de/wp-json
+    status: 200
+  - url: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+    status: 401
+  - url: https://1000satellites.de/openapi.json
+    status: 404
+  checked: '2026-09-05'

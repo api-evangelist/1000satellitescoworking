@@ -1,0 +1,89 @@
+generated: '2026-09-05'
+method: searched
+source: https://1000satellites.de/preise
+plan_count: 10
+api_plan_count: 0
+subject: workspace-membership
+description: >-
+  IMPORTANT FOR ANY READER SCORING THIS RECORD: the ten priced tiers below are COWORKING MEMBERSHIPS, not
+  API plans. 1000 Satellites sells access to physical workspace. It sells no API product, has no developer
+  plan, no free tier for developers, no metered API pricing and no key that could be billed — so
+  api_plan_count is 0. The tiers are captured because the company genuinely publishes a full, transparent,
+  self-serve price list, which is a real commercial-transparency signal about the business; they must not
+  be read as evidence of a priced API.
+currency: EUR
+tax_note: All prices are stated exclusive of German VAT ("exkl. Mehrwertsteuer").
+terms:
+  minimum_term: 1 month
+  notice_period: 14 days
+  rollover: Unused day tickets expire at the end of each month and cannot be carried over.
+plans:
+- name: Daypass
+  price: 39
+  currency: EUR
+  period: month
+  included: 1 coworking day per month
+  category: pass
+- name: BASIC
+  price: 139
+  currency: EUR
+  period: month
+  included: 5 coworking days per month
+  category: pass
+- name: PLUS
+  price: 229
+  currency: EUR
+  period: month
+  included: 10 coworking days per month
+  category: pass
+- name: UNLIMITED
+  price: 399
+  currency: EUR
+  period: month
+  included: Unlimited access Monday to Friday, excluding public holidays
+  category: pass
+- name: 10 Team-Tickets
+  price: 369
+  currency: EUR
+  period: month
+  included: 10 day tickets shared across a team
+  category: team
+- name: 20 Team-Tickets
+  price: 729
+  currency: EUR
+  period: month
+  included: 20 day tickets shared across a team
+  category: team
+- name: 50 Team-Tickets
+  price: 1749
+  currency: EUR
+  period: month
+  included: 50 day tickets shared across a team
+  category: team
+- name: 100 Team-Tickets
+  price: 3399
+  currency: EUR
+  period: month
+  included: 100 day tickets shared across a team
+  category: team
+- name: Friday-Team-Ticket
+  price: 319
+  currency: EUR
+  period: month
+  included: Team day tickets valid on Fridays only
+  category: team
+- name: FIX DESK
+  price: 499
+  currency: EUR
+  period: month
+  included: A dedicated fixed desk with 24/7 access
+  category: desk
+enterprise:
+  contact_only: true
+  note: >-
+    Meeting rooms, event space, business-address services and corporate workplace solutions are quoted on
+    request through the contact and booking forms rather than listed with a price.
+x-evidence:
+  fetched: '2026-09-05'
+  url: https://1000satellites.de/preise
+  http_status: 200

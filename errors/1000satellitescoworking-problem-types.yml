@@ -1,0 +1,61 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live error responses observed on https://1000satellites.de/wp-json on 2026-09-05, cross-checked against
+  the derived openapi/1000satellitescoworking-content-api-openapi.yml.
+format: wordpress-rest
+format_note: >-
+  Not RFC 9457. The envelope is the WordPress REST error object served as application/json:
+  {"code": "<machine code>", "message": "<human text>", "data": {"status": <http status>}}. There is no
+  `type` URI, no `title`, no `detail` and no `instance`, so an agent cannot dereference an error into
+  documentation. The message field is LOCALISED — this site serves German (de-DE) by default and returns
+  German error text to an unauthenticated client, which is a real interoperability hazard for a consumer
+  matching on message strings rather than on `code`.
+envelope:
+  fields:
+  - {name: code, type: string, description: Machine-readable error code. The only stable field — match on this.}
+  - {name: message, type: string, description: 'Human-readable text, localised (de-DE by default on this host).'}
+  - {name: data.status, type: integer, description: The HTTP status code, repeated inside the body.}
+  content_type: application/json
+problems:
+- code: rest_forbidden
+  status: 401
+  title: Not permitted
+  observed_message: Du bist leider nicht berechtigt, diese Aktion durchzuführen.
+  remediation: >-
+    Authenticate as a WordPress user with the required capability. Returned by /wp/v2/users,
+    /wp/v2/settings, /wp/v2/themes, /wp/v2/plugins, /wp/v2/menus, /wp/v2/block-types,
+    /wp-abilities/v1/abilities and the MCP adapter default server.
+  observed_at: https://1000satellites.de/wp-json/wp/v2/users
+- code: mcp_unauthorized
+  status: 401
+  title: MCP authentication required
+  observed_message: MCP authentication required.
+  remediation: >-
+    Obtain an OAuth 2.1 bearer token with the `mcp` scope via the authorization-code + PKCE flow described
+    in scopes/1000satellitescoworking-scopes.yml, and send it in the Authorization header. The response
+    carries a WWW-Authenticate header naming the RFC 9728 protected-resource document.
+  observed_at: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+- code: rest_no_route
+  status: 404
+  title: No matching route
+  observed_message: Es wurde keine Route gefunden, die mit der URL und der Anfragemethode übereinstimmt.
+  remediation: Check the path and the HTTP method against the route index at /wp-json.
+  observed_at: https://1000satellites.de/wp-json/wp/v2/listdom-listing
+- code: null
+  status: 403
+  title: Feed unavailable
+  observed_message: The public listings feed is unavailable.
+  remediation: >-
+    Returned by the Listdom plugin's public listings feed (/wp-json/listdom/v1/public/listings), which is
+    advertised in the route index but switched off. Note this response does NOT use the WordPress error
+    envelope — it returns {"success":0,"message":"..."} instead, so a consumer parsing `code` on every
+    error will get null here. A second, inconsistent error shape on the same host.
+  observed_at: https://1000satellites.de/wp-json/listdom/v1/public/listings
+undocumented:
+  note: >-
+    1000 Satellites publishes no error reference of any kind. Every entry above was observed live rather
+    than read from documentation; the `title` and `remediation` fields are API Evangelist's description of
+    the observed behaviour, not provider text.
+x-evidence:
+  fetched: '2026-09-05'

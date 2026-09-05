@@ -1,0 +1,46 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the 1000 Satellites Content API
+  version: 1.0.0
+extends: openapi/1000satellitescoworking-content-api-openapi.yml
+x-generated: '2026-09-05'
+x-method: generated
+x-source: >-
+  API Evangelist enrichment pipeline. Captures our annotations separately so the derived spec stays a
+  faithful projection of the provider's own /wp-json route index.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-profile: https://apis.io/provider/1000satellitescoworking
+    x-apievangelist-provider-published: false
+    x-apievangelist-note: >-
+      Derived by API Evangelist from the provider's WordPress route-discovery document. 1000 Satellites
+      publishes no OpenAPI of its own and operates no developer programme.
+- target: $.info
+  update:
+    x-apievangelist-surface-class: cms-content-api
+    x-apievangelist-product-api: false
+- target: $.servers[0]
+  update:
+    x-apievangelist-verified: '2026-09-05'
+    x-apievangelist-verified-status: 200
+- target: $.paths['/wp/v2/posts'].get
+  update:
+    x-apievangelist-observed-total: 28
+    x-apievangelist-observed-on: '2026-09-05'
+- target: $.paths['/wp/v2/posts'].get
+  update:
+    x-agentic-access:
+      action-class: connected
+      consequence: read
+      audit: optional
+- target: $.paths['/wp/v2/search'].get
+  update:
+    x-apievangelist-note: >-
+      Site-wide search across public content. The most useful single operation on this surface for an agent
+      answering questions about the company's locations and services.
+- target: $.components.schemas.WPError
+  update:
+    x-apievangelist-note: >-
+      Not RFC 9457. Match on `code`, never on `message` — message text is localised and this host serves
+      German by default.

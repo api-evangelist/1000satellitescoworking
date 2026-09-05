@@ -1,0 +1,51 @@
+generated: '2026-09-05'
+method: derived
+source: mcp/1000satellitescoworking-mcp.yml + openapi/1000satellitescoworking-content-api-openapi.yml
+description: >-
+  1000 Satellites runs two overlapping projections of one WordPress data core: a remote MCP server and the
+  anonymously readable wp/v2 REST content surface. This crosswalk exists to record that divergence rather
+  than paper over it. It is deliberately EMPTY on the tool side: the MCP tools/list call is
+  authentication-gated (HTTP 401) on both server routes, and the WordPress Abilities registry that backs
+  the tools is gated too, so no tool name is known. No tool rows are guessed from the REST surface —
+  inventing plausible names for an unenumerated server is the failure mode this artifact is meant to
+  prevent.
+surfaces:
+  openapi:
+    file: openapi/1000satellitescoworking-content-api-openapi.yml
+    operations: 19
+    gated: false
+    note: Derived from the provider's /wp-json route index; the ten resources documented were each
+      confirmed to return HTTP 200 to an anonymous request on 2026-09-05.
+  mcp:
+    url: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+    gated: true
+    gate: OAuth 2.1 bearer token, scope `mcp`; anonymous tools/list returns 401 mcp_unauthorized.
+  graphql:
+    present: false
+    note: No /graphql surface exists on this host — /graphql returns the site's HTML 404 page.
+crosswalk: []
+mcp_only: []
+rest_only:
+- capability: Content read — posts and pages
+  operations: [listPosts, getPost, listPages, getPage]
+  note: The company news feed and its location, service and legal pages.
+- capability: Media library
+  operations: [listMedia, getMediaItem]
+- capability: Taxonomy
+  operations: [listCategories, getCategory, listTags, getTag, listTaxonomies, getTaxonomy]
+- capability: Comments
+  operations: [listComments, getComment]
+- capability: Site metadata
+  operations: [listTypes, getType, listStatuses, getStatus]
+- capability: Search
+  operations: [searchSite]
+coverage:
+  tools_named: 0
+  tools_bound: 0
+  mcp_only: 0
+  rest_operations_total: 19
+  rest_operations_with_tool: 0
+  note: >-
+    tools_named is 0 because the server is gated, NOT because the server is empty. This is an unmeasured
+    surface, not a measured absence. Re-run this crosswalk if 1000 Satellites publishes a tool inventory or
+    opens anonymous introspection.

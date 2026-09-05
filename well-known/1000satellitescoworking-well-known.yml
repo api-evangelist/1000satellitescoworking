@@ -1,0 +1,88 @@
+generated: '2026-09-05'
+method: probed
+source: Live probe of the named /.well-known/ path list on every host this record knows.
+description: '1000 Satellites serves two real discovery documents from the apex domain: RFC 8414 OAuth authorization-server
+  metadata and RFC 9728 OAuth protected-resource metadata, both published by the WordPress MCP Adapter plugin running
+  on 1000satellites.de. The protected-resource document names the company''s remote MCP endpoint. Every other named
+  path returns the site''s HTML 404 page. A negative-control probe of a path that cannot exist returned 404, so
+  this host does not echo paths and the two hits above are genuine.'
+hosts:
+- host: https://1000satellites.de
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: 1000satellitescoworking-oauth-authorization-server.json
+    content_type: application/json; charset=UTF-8
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: 1000satellitescoworking-oauth-protected-resource.json
+    content_type: application/json; charset=UTF-8
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/1000satellitescoworking-negative-control-7f3ab91c.json
+    status: 404
+    note: negative control — a path that cannot exist
+  hit_count: 2
+  path_echo_control: passed
+- host: https://www.1000satellites.de
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: 1000satellitescoworking-oauth-authorization-server.json
+    content_type: application/json; charset=UTF-8
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: 1000satellitescoworking-oauth-protected-resource.json
+    content_type: application/json; charset=UTF-8
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/1000satellitescoworking-negative-control-7f3ab91c.json
+    status: 404
+    note: negative control — a path that cannot exist
+  hit_count: 2
+  path_echo_control: passed
+x-evidence:
+  fetched: '2026-09-05'
+  host_set_note: The host set is the registrable domain and its www. alias. 1000 Satellites publishes no api., docs.,
+    developer., app. or status. subdomain — all six resolved to no DNS record on 2026-09-05 — and the only API baseURL
+    and OpenAPI servers[] host in this record is 1000satellites.de itself.

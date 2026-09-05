@@ -1,0 +1,35 @@
+generated: '2026-09-05'
+method: probed
+source: https://1000satellites.de/.well-known/oauth-authorization-server
+docs: null
+description: >-
+  1000 Satellites publishes RFC 8414 authorization-server metadata at the apex domain, emitted by the
+  WordPress MCP Adapter plugin. It declares exactly one scope, `mcp`, which gates the remote MCP server.
+  This is not a documented developer scope model — the company publishes no OAuth or permissions reference
+  page — it is what the discovery document itself states. No scope descriptions are recorded because the
+  provider publishes none, and writing them would be invention.
+schemes:
+- name: OAuth2
+  source: https://1000satellites.de/.well-known/oauth-authorization-server
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://1000satellites.de/oauth/authorize
+    tokenUrl: https://1000satellites.de/oauth/token
+    revocationUrl: https://1000satellites.de/oauth/revoke
+    pkce: S256
+    scopes: [mcp]
+scopes:
+- scope: mcp
+  description: null
+  description_source: none — the provider publishes no scope reference
+  flows: [authorizationCode]
+  protects: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  sources: [https://1000satellites.de/.well-known/oauth-authorization-server]
+x-evidence:
+  fetched: '2026-09-05'
+  probes:
+  - url: https://1000satellites.de/.well-known/oauth-authorization-server
+    status: 200
+  - url: https://1000satellites.de/.well-known/oauth-protected-resource
+    status: 200

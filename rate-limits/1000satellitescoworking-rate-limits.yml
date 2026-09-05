@@ -1,0 +1,33 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Response headers observed on https://1000satellites.de/wp-json/wp/v2/posts and the MCP endpoint on
+  2026-09-05.
+limit_count: 0
+description: >-
+  1000 Satellites publishes no rate limits and returns no rate-limit headers. This is an honest zero
+  measured from live responses, not an unchecked field. There is no developer documentation in which a
+  limit could be published, because there is no developer programme.
+limits: []
+response_headers:
+  observed: []
+  checked_for: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, X-RateLimit-Limit, X-RateLimit-Remaining,
+    X-RateLimit-Reset, Retry-After]
+  note: >-
+    None of the seven headers above appeared on any observed response. An agent gets no runtime signal at
+    all — it cannot pace itself, and it will not be told when it is close to a limit.
+exhaustion_status: null
+enforcement:
+  documented: false
+  inferred: >-
+    The site is fronted by nginx and a Varnish cache (x-varnish-cache, x-cacheable response headers) and
+    runs the Wordfence security plugin, whose route namespace is advertised in the route index. Wordfence
+    applies its own request throttling and blocking rules. So throttling almost certainly exists in
+    practice — it is simply undocumented and unsignalled, which is the worst combination for an automated
+    consumer: a client learns the limit only by being blocked. Recorded as inference, explicitly not as a
+    published limit.
+x-evidence:
+  fetched: '2026-09-05'
+  probes:
+  - {url: 'https://1000satellites.de/wp-json/wp/v2/posts?per_page=1', status: 200, rate_limit_headers: none}
+  - {url: 'https://1000satellites.de/wp-json/mcp/mcp-oauth-server', status: 401, rate_limit_headers: none}

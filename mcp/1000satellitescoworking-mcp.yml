@@ -1,0 +1,100 @@
+generated: '2026-09-05'
+method: searched
+source: https://1000satellites.de/.well-known/oauth-protected-resource
+status: published
+description: >-
+  1000 Satellites publishes a live remote Model Context Protocol server on its primary marketing host. It
+  appears in no MCP registry and in no company documentation — it was found by probing the named
+  /.well-known/ path list on 1000satellites.de, which returns both RFC 8414 authorization-server metadata
+  and RFC 9728 protected-resource metadata, and by reading the WordPress REST route index at /wp-json,
+  which advertises an `mcp` namespace with two server routes. The server is the WordPress MCP Adapter
+  fronting the company's WordPress content estate (news, location pages, media) — it is not a booking,
+  availability or membership API for the coworking product.
+server:
+  name: 1000satellites
+  transport: http
+  url: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  protocol: MCP over HTTP (JSON-RPC 2.0)
+  implementation: >-
+    WordPress REST namespace `mcp` on the 1000satellites.de site (WordPress + Elementor + WPML, behind the
+    /wp-json/ route namespace). Backed by the WordPress Abilities API at the wp-abilities/v1 namespace.
+  routes:
+  - path: /wp-json/mcp/mcp-oauth-server
+    methods: [POST, GET, DELETE]
+    note: The OAuth-protected server named by the RFC 9728 protected-resource document.
+  - path: /wp-json/mcp/mcp-adapter-default-server
+    methods: [POST, GET, DELETE]
+    note: The MCP Adapter default server route, advertised in the route index but not named by the
+      protected-resource document.
+authorization:
+  required: true
+  model: OAuth 2.1 authorization code with PKCE
+  authorization_servers:
+  - https://1000satellites.de
+  issuer: https://1000satellites.de
+  authorization_endpoint: https://1000satellites.de/oauth/authorize
+  token_endpoint: https://1000satellites.de/oauth/token
+  revocation_endpoint: https://1000satellites.de/oauth/revoke
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  response_types_supported:
+  - code
+  code_challenge_methods_supported:
+  - S256
+  token_endpoint_auth_methods_supported:
+  - none
+  client_id_metadata_document_supported: true
+  authorization_response_iss_parameter_supported: true
+  bearer_methods_supported:
+  - header
+  scopes_supported:
+  - mcp
+  detail: scopes/1000satellitescoworking-scopes.yml
+tools:
+  discovered: false
+  discovery_method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"} with Accept: application/json,
+    text/event-stream'
+  http_status: 401
+  response: '{"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}'
+  www_authenticate: 'Bearer realm="https://1000satellites.de", resource_metadata="https://1000satellites.de/.well-known/oauth-protected-resource"'
+  note: >-
+    The live tool list and per-tool inputSchema are auth-gated on both routes, and the WordPress Abilities
+    registry that backs them (/wp-json/wp-abilities/v1/abilities) returns 401 as well. 1000 Satellites
+    publishes no tool inventory in documentation and serves no llms.txt, so NO tool list is recorded here —
+    deriving one would be fabrication. Authenticated introspection is required to enumerate the surface.
+related_surfaces:
+  openapi: openapi/1000satellitescoworking-content-api-openapi.yml
+  note: >-
+    The MCP server and the derived Content API are projections of the same WordPress data core, but they
+    are not the same surface and neither is a superset. See mcp/1000satellitescoworking-tool-crosswalk.yml.
+x-evidence:
+  fetched: '2026-09-05'
+  probes:
+  - url: https://1000satellites.de/.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+  - url: https://1000satellites.de/.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+  - url: https://1000satellites.de/wp-json/mcp
+    status: 200
+    note: route index advertising both MCP server routes
+  - url: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+    method: POST tools/list
+    status: 401
+  - url: https://1000satellites.de/wp-json/mcp/mcp-adapter-default-server
+    method: POST tools/list
+    status: 401
+  - url: https://1000satellites.de/wp-json/wp-abilities/v1/abilities
+    status: 401
+deployment:
+  mode: remote
+  endpoint: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  auth: oauth
+  verified: probed
+  probe: gated
+  checked: '2026-09-05'
+  note: >-
+    Remote only. 1000 Satellites ships no stdio package — there is no npm, PyPI or repository distribution
+    of an MCP server for this provider, and no install command is published anywhere.

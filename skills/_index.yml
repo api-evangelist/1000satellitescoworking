@@ -1,0 +1,24 @@
+generated: '2026-09-05'
+method: generated
+source: >-
+  Grounded in openapi/1000satellitescoworking-content-api-openapi.yml — every operationId referenced in
+  these skills was verified to exist in that spec. No skill is written for the MCP server: its tool list is
+  authentication-gated and unpublished, so there is nothing real to ground one in.
+skills:
+- file: 1000satellitescoworking-read-news.md
+  name: Read the 1000 Satellites news feed
+  description: Retrieve and summarise company news — new location openings, funding and announcements —
+    from the anonymously readable WordPress content API.
+  api: openapi/1000satellitescoworking-content-api-openapi.yml
+  operations: [listPosts, getPost, listCategories, listTags, getMediaItem]
+- file: 1000satellitescoworking-find-locations-and-services.md
+  name: Answer questions about 1000 Satellites locations and services
+  description: Use site search and the pages collection to answer questions about locations, meeting rooms
+    and membership terms — and to recognise when the answer is not available from any API.
+  api: openapi/1000satellitescoworking-content-api-openapi.yml
+  operations: [searchSite, listPages, getPage, listMedia, listTypes, listTaxonomies]
+not_written:
+- skill: MCP tool usage
+  reason: >-
+    tools/list returns 401 on both MCP routes and the backing WordPress Abilities registry is gated too.
+    No tool name, description or inputSchema is public, so any skill would be invented.

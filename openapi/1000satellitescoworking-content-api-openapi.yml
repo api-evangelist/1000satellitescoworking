@@ -1,0 +1,2093 @@
+openapi: 3.1.0
+info:
+  title: 1000 Satellites Content API (WordPress REST wp/v2)
+  version: wp/v2
+  summary: 'Public read surface of 1000satellites.de: news posts, location and marketing pages, media library, taxonomies
+    and site search.'
+  description: '1000 Satellites publishes 1000satellites.de on WordPress, which exposes the WordPress REST API at https://1000satellites.de/wp-json/.
+    The wp/v2 namespace is anonymously readable and returns the company''s news posts, location and marketing pages, media
+    library, categories, tags, comments, registered types/taxonomies/statuses and a site-wide search endpoint as JSON.
+
+
+    This document was DERIVED mechanically by API Evangelist from the route-discovery document served at https://1000satellites.de/wp-json/
+    on 2026-09-05 — every path, method and parameter below is taken verbatim from that descriptor, and only the resources
+    that were confirmed to return HTTP 200 to an anonymous request on that date are included. 1000 Satellites does not publish
+    an OpenAPI definition of its own, and this is not a product API: it is the content API the CMS exposes. Write operations
+    exist on several of these routes but require authentication (WordPress Application Passwords over HTTP Basic) and are
+    deliberately not documented here. The /wp/v2/users, /wp/v2/settings, /wp/v2/themes, /wp/v2/plugins, /wp/v2/menus and /wp/v2/block-types
+    routes returned HTTP 401 to an anonymous request and are likewise excluded.'
+  contact:
+    name: 1000 Satellites GmbH
+    url: https://1000satellites.de/kontakt/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://1000satellites.de/wp-json/
+  x-derived-on: '2026-09-05'
+  x-provider-published: false
+servers:
+- url: https://1000satellites.de/wp-json
+  description: Production
+tags:
+- name: Posts
+  description: Blog posts and news articles published on 1000satellites.de.
+- name: Pages
+  description: Marketing, location and legal pages of the 1000 Satellites site.
+- name: Media
+  description: Media library items (photography of the coworking locations, documents).
+- name: Categories
+  description: Post categories.
+- name: Tags
+  description: Post tags.
+- name: Comments
+  description: Comments on posts.
+- name: Types
+  description: Registered post types on the site.
+- name: Taxonomies
+  description: Registered taxonomies on the site.
+- name: Statuses
+  description: Registered post statuses.
+- name: Search
+  description: Site-wide search across public content.
+paths:
+  /wp/v2/posts:
+    get:
+      operationId: listPosts
+      summary: List posts
+      description: Blog posts and news articles published on 1000satellites.de.
+      tags:
+      - Posts
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die bestimmten Autoren zugewiesen sind.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz Beiträge ausschließt, die bestimmten Autoren zugewiesen sind.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: search_semantics
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - exact
+        description: Wie man Suchbegriffe interpretiert.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          default: date
+        description: Sammlung nach Beitragsattribut sortieren.
+      - name: search_columns
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+        description: Array mit den zu durchsuchenden Spaltennamen.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Beiträge mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          default: publish
+          items:
+            type: string
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - any
+        description: Ergebnissatz auf Beiträge begrenzen, denen ein oder mehrere Status zugewiesen sind.
+      - name: tax_relation
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - AND
+          - OR
+        description: Abfrage-Ergebnis auf Basis der Beziehung zwischen mehreren Taxonomien einschränken.
+      - name: categories
+        in: query
+        required: false
+        schema:
+          type: object
+        description: Ergebnissatz auf Elemente beschränken, denen bestimmte Begriffe in der Taxonomie categories zugewiesen
+          sind.
+      - name: categories_exclude
+        in: query
+        required: false
+        schema:
+          type: object
+        description: Ergebnissatz auf Elemente beschränken, außer auf solche, denen bestimmte Begriffe in der Taxonomie categories
+          zugewiesen sind.
+      - name: tags
+        in: query
+        required: false
+        schema:
+          type: object
+        description: Ergebnissatz auf Elemente beschränken, denen bestimmte Begriffe in der Taxonomie tags zugewiesen sind.
+      - name: tags_exclude
+        in: query
+        required: false
+        schema:
+          type: object
+        description: Ergebnissatz auf Elemente beschränken, außer auf solche, denen bestimmte Begriffe in der Taxonomie tags
+          zugewiesen sind.
+      - name: sticky
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Den Ergebnissatz auf Elemente begrenzen, die oben gehalten werden.
+      - name: ignore_sticky
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+        description: Ob oben gehaltene Beiträge ignoriert werden sollen oder nicht.
+      - name: format
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - standard
+            - aside
+            - chat
+            - gallery
+            - link
+            - image
+            - quote
+            - status
+            - video
+            - audio
+        description: Den Ergebnissatz auf Elemente begrenzen, denen ein oder mehrere bestimmte Formate zugeordnet sind.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of posts. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/posts/{id}:
+    get:
+      operationId: getPost
+      summary: Get a single post
+      description: Retrieve one item from the posts collection by its unique identifier.
+      tags:
+      - Posts
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Beitrag.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: excerpt_length
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Setzt die Standardlänge des Textauszugs außer Kraft.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den Beitrag, falls dieser passwortgeschützt ist.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested post.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/pages:
+    get:
+      operationId: listPages
+      summary: List pages
+      description: Marketing, location and legal pages of the 1000 Satellites site.
+      tags:
+      - Pages
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die bestimmten Autoren zugewiesen sind.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz Beiträge ausschließt, die bestimmten Autoren zugewiesen sind.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: menu_order
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die einen bestimmten menu_order-Wert haben.
+      - name: search_semantics
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - exact
+        description: Wie man Suchbegriffe interpretiert.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - menu_order
+          default: date
+        description: Sammlung nach Beitragsattribut sortieren.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente bestimmter übergeordneter IDs begrenzen.
+      - name: parent_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente begrenzen, außer denen mit einer bestimmten übergeordneten ID.
+      - name: search_columns
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+        description: Array mit den zu durchsuchenden Spaltennamen.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Beiträge mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          default: publish
+          items:
+            type: string
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - any
+        description: Ergebnissatz auf Beiträge begrenzen, denen ein oder mehrere Status zugewiesen sind.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of pages. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/pages/{id}:
+    get:
+      operationId: getPage
+      summary: Get a single page
+      description: Retrieve one item from the pages collection by its unique identifier.
+      tags:
+      - Pages
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Beitrag.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: excerpt_length
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Setzt die Standardlänge des Textauszugs außer Kraft.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den Beitrag, falls dieser passwortgeschützt ist.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested page.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/media:
+    get:
+      operationId: listMedia
+      summary: List media
+      description: Media library items (photography of the coworking locations, documents).
+      tags:
+      - Media
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die bestimmten Autoren zugewiesen sind.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz Beiträge ausschließt, die bestimmten Autoren zugewiesen sind.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: search_semantics
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - exact
+        description: Wie man Suchbegriffe interpretiert.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - rml
+          default: date
+        description: Sammlung nach Beitragsattribut sortieren.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente bestimmter übergeordneter IDs begrenzen.
+      - name: parent_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente begrenzen, außer denen mit einer bestimmten übergeordneten ID.
+      - name: search_columns
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+        description: Array mit den zu durchsuchenden Spaltennamen.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Beiträge mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          default: inherit
+          items:
+            type: string
+            enum:
+            - inherit
+            - private
+            - trash
+        description: Ergebnissatz auf Beiträge begrenzen, denen ein oder mehrere Status zugewiesen sind.
+      - name: rml_folder
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Lade nur Medien in einem Ordner nach Ordnerkennung.
+      - name: media_type
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - image
+            - video
+            - text
+            - application
+            - audio
+        description: Den Ergebnissatz auf Anhänge eines bestimmten Medientyps oder bestimmter Medientypen begrenzen.
+      - name: mime_type
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Den Ergebnissatz auf Anhänge eines bestimmten MIME-Typs oder bestimmter MIME-Typen begrenzen.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of media. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/media/{id}:
+    get:
+      operationId: getMediaItem
+      summary: Get a single mediaitem
+      description: Retrieve one item from the media collection by its unique identifier.
+      tags:
+      - Media
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Beitrag.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested mediaitem.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/categories:
+    get:
+      operationId: listCategories
+      summary: List categories
+      description: Post categories.
+      tags:
+      - Categories
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sammlung nach Begriffsattribut sortieren.
+      - name: hide_empty
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Ob Begriffe ausgeblendet werden sollen, die keinen Beiträgen zugewiesen sind.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz auf Begriffe begrenzen, die einem bestimmten übergeordneten Objekt zugewiesen sind.
+      - name: post
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Ergebnissatz auf Begriffe begrenzen, die einem bestimmten Beitrag zugewiesen sind.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Begriffe mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of categories. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/categories/{id}:
+    get:
+      operationId: getCategory
+      summary: Get a single category
+      description: Retrieve one item from the categories collection by its unique identifier.
+      tags:
+      - Categories
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Begriff.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested category.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/tags:
+    get:
+      operationId: listTags
+      summary: List tags
+      description: Post tags.
+      tags:
+      - Tags
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sammlung nach Begriffsattribut sortieren.
+      - name: hide_empty
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: Ob Begriffe ausgeblendet werden sollen, die keinen Beiträgen zugewiesen sind.
+      - name: post
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Ergebnissatz auf Begriffe begrenzen, die einem bestimmten Beitrag zugewiesen sind.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Begriffe mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of tags. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/tags/{id}:
+    get:
+      operationId: getTag
+      summary: Get a single tag
+      description: Retrieve one item from the tags collection by its unique identifier.
+      tags:
+      - Tags
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Begriff.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested tag.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/comments:
+    get:
+      operationId: listComments
+      summary: List comments
+      description: Comments on posts.
+      tags:
+      - Comments
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Kommentare einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht
+          wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ergebnissatz auf Kommentare begrenzen, denen bestimmte Benutzer-IDs zugewiesen sind. Erfordert eine Autorisierung.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz Kommentare ausschließt, die einer bestimmten Benutzer-ID zugewiesen
+          sind. Erfordert eine Autorisierung.
+      - name: author_email
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Den Ergebnissatz auf den einer speziellen E-Mail-Adresse eines Autors begrenzen. Erfordert eine Autorisierung.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Kommentare einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht
+          wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - date
+          - date_gmt
+          - id
+          - include
+          - post
+          - parent
+          - type
+          default: date_gmt
+        description: Sammlung nach Kommentarattribut sortieren.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf Kommentare bestimmter übergeordneter IDs begrenzen.
+      - name: parent_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz bestimmte übergeordnete IDs ausschließt.
+      - name: post
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Kommentare begrenzen, die bestimmten Beitrags-IDs zugewiesen sind.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: approve
+        description: Ergebnissatz auf Kommentare begrenzen, denen ein bestimmter Status zugewiesen ist. Erfordert eine Autorisierung.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          default: comment
+        description: Ergebnissatz auf Kommentare begrenzen, denen ein bestimmter Typ zugewiesen ist. Erfordert eine Autorisierung.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den Beitrag, falls dieser passwortgeschützt ist.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of comments. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/comments/{id}:
+    get:
+      operationId: getComment
+      summary: Get a single comment
+      description: Retrieve one item from the comments collection by its unique identifier.
+      tags:
+      - Comments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Kommentar.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den übergeordneten Beitrag des Kommentars (wenn der Beitrag passwortgeschützt ist).
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested comment.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/types:
+    get:
+      operationId: listTypes
+      summary: List types
+      description: Registered post types on the site.
+      tags:
+      - Types
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of types. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/types/{type}:
+    get:
+      operationId: getType
+      summary: Get a single type
+      description: Retrieve one item from the types collection by its unique identifier.
+      tags:
+      - Types
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Eine alphanumerische Kennung für den Inhaltstyp.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested type.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List taxonomies
+      description: Registered taxonomies on the site.
+      tags:
+      - Taxonomies
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf Taxonomien begrenzen, die einem bestimmten Inhaltstyp zugeordnet sind.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of taxonomies. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomy
+      summary: Get a single taxonomy
+      description: Retrieve one item from the taxonomies collection by its unique identifier.
+      tags:
+      - Taxonomies
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Eine alphanumerische Kennung für die Taxonomie.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested taxonomy.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/statuses:
+    get:
+      operationId: listStatuses
+      summary: List statuses
+      description: Registered post statuses.
+      tags:
+      - Statuses
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of statuses. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/statuses/{status}:
+    get:
+      operationId: getStatus
+      summary: Get a single status
+      description: Retrieve one item from the statuses collection by its unique identifier.
+      tags:
+      - Statuses
+      parameters:
+      - name: status
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Eine alphanumerische Kennung für den Status.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested status.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/search:
+    get:
+      operationId: searchSite
+      summary: Search the site
+      description: Site-wide search across public content.
+      tags:
+      - Search
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+        description: Ergebnisse auf Elemente eines Objekt-Typs beschränken.
+      - name: subtype
+        in: query
+        required: false
+        schema:
+          type: array
+          default: any
+          items:
+            type: string
+            enum:
+            - post
+            - page
+            - elementskit_content
+            - elementskit_template
+            - category
+            - post_tag
+            - any
+        description: Ergebnisse auf einen oder mehrere Objekt-Subtypen einschränken.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of search. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+components:
+  responses:
+    WPError:
+      description: WordPress REST API error envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WPError'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
+  schemas:
+    WPError:
+      type: object
+      description: The error envelope returned by every WordPress REST API route. Observed live on 1000satellites.de on 2026-09-05.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_forbidden, rest_no_route, rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message. Localized — this site serves German (de-DE) by default.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+      required:
+      - code
+      - message

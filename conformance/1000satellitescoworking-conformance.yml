@@ -1,0 +1,92 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Fetched discovery documents on 1000satellites.de plus the live wp/v2 responses and 401 challenges
+  observed on 2026-09-05.
+description: >-
+  What 1000 Satellites' machine-readable surface actually conforms to. Everything asserted true below was
+  read out of a document that was fetched, or out of an observed HTTP response — nothing is taken from a
+  marketing claim, because the company makes none about its API surface.
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    RFC 8414 authorization-server metadata at https://1000satellites.de/.well-known/oauth-authorization-server
+    declares authorization_code and refresh_token grants and a code endpoint.
+- id: rfc8414-authorization-server-metadata
+  conforms: true
+  evidence: https://1000satellites.de/.well-known/oauth-authorization-server returned 200 application/json
+- id: rfc9728-protected-resource-metadata
+  conforms: true
+  evidence: >-
+    https://1000satellites.de/.well-known/oauth-protected-resource returned 200 and names the resource and
+    its authorization_servers; the MCP 401 also carries a WWW-Authenticate header with resource_metadata,
+    which is the full RFC 9728 challenge-and-discovery loop.
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported = ["S256"]
+- id: oauth2-public-clients
+  conforms: true
+  evidence: token_endpoint_auth_methods_supported = ["none"]
+- id: client-id-metadata-document
+  conforms: true
+  evidence: client_id_metadata_document_supported = true — no RFC 7591 dynamic registration endpoint is offered.
+- id: mcp
+  conforms: true
+  evidence: >-
+    A JSON-RPC 2.0 MCP endpoint at /wp-json/mcp/mcp-oauth-server, advertised in the /wp-json route index
+    under the `mcp` namespace and named as the protected resource. Version could not be read — initialize
+    is gated.
+- id: jsonrpc-2.0
+  conforms: true
+  evidence: The MCP endpoint accepts JSON-RPC 2.0 envelopes and returns JSON errors.
+- id: openidconnect
+  conforms: false
+  evidence: /.well-known/openid-configuration returned 404. The authorization server is OAuth-only; no
+    id_token, no userinfo, no jwks_uri is advertised.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use the WordPress envelope {"code","message","data":{"status"}} with content-type
+    application/json, not application/problem+json. See errors/1000satellitescoworking-problem-types.yml.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returned 404 on both 1000satellites.de and www.1000satellites.de.
+- id: apis-json
+  conforms: false
+  evidence: /apis.json, /apis.yml and /.well-known/apis.json all returned 404.
+- id: aauth
+  conforms: false
+  evidence: /.well-known/aauth-resource.json returned 404.
+- id: a2a
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json both returned 404.
+- id: pagination
+  conforms: true
+  evidence: >-
+    Collection routes take page and per_page and return X-WP-Total and X-WP-TotalPages, both exposed via
+    Access-Control-Expose-Headers. Observed x-wp-total 28 on /wp/v2/posts.
+- id: idempotency
+  conforms: false
+  evidence: >-
+    Not applicable rather than absent — the documented surface is read-only. No idempotency key mechanism
+    is documented or implied. See conventions/1000satellitescoworking-conventions.yml.
+- id: cors
+  conforms: true
+  evidence: >-
+    Access-Control-Allow-Headers and Access-Control-Expose-Headers are returned on wp/v2 responses,
+    exposing X-WP-Total, X-WP-TotalPages and Link to browser clients.
+domain_standards:
+  applicable: false
+  note: >-
+    Flexible-workspace and coworking operations have no domain interchange standard in the Kin Score
+    regulatory map — there is no regime covering real estate or workspace in scoring.yml, and no SCIM,
+    OData, OpenRTB, HL7, X12 or ISO 20022 shape appears anywhere in this provider's surface. Recorded as
+    not applicable rather than left blank; this is reward-only and the provider is not penalised for it.
+compliance_program:
+  published: false
+  note: >-
+    No trust centre, no certification page, and no SOC 2 / ISO 27001 / PCI / HIPAA claim was found. The
+    company publishes a German Datenschutzerklärung (GDPR privacy notice) and an AGB, which are legal
+    notices required of any German business, not a published compliance programme. No `Compliance` pointer
+    is emitted.

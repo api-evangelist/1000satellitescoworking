@@ -1,0 +1,95 @@
+generated: '2026-09-05'
+method: probed
+source: >-
+  Live responses and headers observed on https://1000satellites.de/wp-json on 2026-09-05, plus the route
+  index the derived OpenAPI was built from.
+description: >-
+  Cross-cutting request/response semantics of the only callable surface 1000 Satellites exposes. The
+  provider documents none of this — it is standard WordPress REST behaviour, recorded from observation so
+  a consumer knows what to expect.
+authentication:
+  style: none for the documented read surface; OAuth 2.1 bearer for MCP; WordPress cookie/nonce or
+    Application Passwords for everything administrative.
+  detail: authentication/1000satellitescoworking-authentication.yml
+pagination:
+  style: page-number
+  request_params: [page, per_page]
+  defaults: {page: 1, per_page: 10}
+  maximum_per_page: 100
+  response_headers: [X-WP-Total, X-WP-TotalPages]
+  link_header: true
+  link_header_note: A standard RFC 8288 Link header carries rel="next" and rel="prev".
+  cors_exposed: true
+  cors_note: X-WP-Total, X-WP-TotalPages and Link are named in Access-Control-Expose-Headers, so a browser
+    client can read them.
+  observed: 'GET /wp/v2/posts?per_page=1 returned x-wp-total: 28 and x-wp-totalpages: 28'
+filtering_and_search:
+  params: [search, after, before, modified_after, modified_before, author, categories, tags, slug, status, order, orderby]
+  note: Taken verbatim from the route index arguments; availability differs per resource.
+field_selection:
+  supported: true
+  params: [_fields, _embed]
+  note: >-
+    Standard WordPress sparse-fieldset and embedding parameters. _fields trims the response and _embed
+    inlines linked resources. Not advertised in the route index arguments but part of the WordPress REST
+    contract on every route.
+content_negotiation:
+  response_content_type: application/json
+  localisation: >-
+    The site runs WPML and serves German by default. A wpml_language query parameter (enum: en, de) is
+    accepted on effectively every route, including the MCP and abilities routes. Response text — including
+    error messages — is localised accordingly.
+request_tracing:
+  request_id_header: null
+  note: No correlation or request-id header is returned. An agent cannot cite a request identifier when
+    reporting a problem.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: lifecycle/1000satellitescoworking-lifecycle.yml
+error_envelope:
+  format: wordpress-rest
+  shape: '{"code": string, "message": string, "data": {"status": integer}}'
+  rfc9457: false
+  inconsistency: >-
+    At least one plugin route (listdom/v1/public/listings) returns {"success":0,"message":"..."} instead,
+    with no `code` field. See errors/1000satellitescoworking-problem-types.yml.
+  detail: errors/1000satellitescoworking-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header was returned on any observed response. See
+    rate-limits/1000satellitescoworking-rate-limits.yml.
+caching:
+  varnish: true
+  note: 'Responses carry x-varnish-cache and x-cacheable headers; the site is fronted by a Varnish cache.'
+idempotency:
+  coverage: na
+  scope: []
+  mechanism: null
+  note: >-
+    Not applicable, not missing. The documented surface is read-only — all 19 operations are GET. Write
+    methods do exist on the underlying WordPress routes but they are authentication-gated, undocumented by
+    the provider and deliberately excluded from the derived OpenAPI, so there is no public mutating surface
+    for an idempotency contract to apply to. No `Idempotency` pointer is emitted in apis.yml: asserting one
+    here would claim a replay-protection guarantee this provider has never made.
+dry_run_mode:
+  supported: na
+  note: No write surface, so nothing to rehearse.
+reversibility:
+  applicable: na
+  grade: na
+  write_surfaces: []
+  note: >-
+    The 15th agent-readiness dimension does not apply to this provider. Every documented operation is a GET
+    against a public content collection; there is no create, update, delete, order, booking or payment
+    operation an agent could take that would need taking back. The company's actual bookable product —
+    workspace reservations — is sold through web forms and a human sales process at
+    https://1000satellites.de/buchung/, not through any API, and its cancellation terms (one-month minimum
+    term, 14 days' notice, per the published price list) are commercial terms rather than an API
+    reversal path. No window is asserted here because no API write operation exists to reverse.
+cross_links:
+  errors: errors/1000satellitescoworking-problem-types.yml
+  lifecycle: lifecycle/1000satellitescoworking-lifecycle.yml
+  authentication: authentication/1000satellitescoworking-authentication.yml
+  rate_limits: rate-limits/1000satellitescoworking-rate-limits.yml

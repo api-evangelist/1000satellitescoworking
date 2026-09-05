@@ -1,0 +1,85 @@
+generated: '2026-09-05'
+method: derived
+source: openapi/1000satellitescoworking-content-api-openapi.yml
+description: >-
+  The entity graph of the WordPress content core behind 1000satellites.de, derived from the route index the
+  OpenAPI was built from. It is the WordPress content model — post, page, media, term, comment — not a
+  domain model of coworking. Note what is NOT here: there is no Location, Satellite, Desk, MeetingRoom,
+  Booking, Membership or Availability entity anywhere on the public surface. The company's locations exist
+  as editorial pages and as Listdom plugin listings whose public feed is switched off (HTTP 403), so the
+  thing a consumer would actually want to model — bookable space — is not exposed.
+entities:
+- name: Post
+  collection: /wp/v2/posts
+  id_field: id
+  operations: [listPosts, getPost]
+  key_fields: [id, date, modified, slug, status, type, link, title, content, excerpt, author, featured_media,
+    categories, tags]
+  count_observed: 28
+- name: Page
+  collection: /wp/v2/pages
+  id_field: id
+  operations: [listPages, getPage]
+  key_fields: [id, date, modified, slug, status, type, link, title, content, parent, menu_order, featured_media]
+- name: MediaItem
+  collection: /wp/v2/media
+  id_field: id
+  operations: [listMedia, getMediaItem]
+  key_fields: [id, date, slug, type, link, title, media_type, mime_type, source_url, alt_text, media_details, post]
+- name: Category
+  collection: /wp/v2/categories
+  id_field: id
+  operations: [listCategories, getCategory]
+  key_fields: [id, count, name, slug, parent, taxonomy]
+- name: Tag
+  collection: /wp/v2/tags
+  id_field: id
+  operations: [listTags, getTag]
+  key_fields: [id, count, name, slug, taxonomy]
+- name: Comment
+  collection: /wp/v2/comments
+  id_field: id
+  operations: [listComments, getComment]
+  key_fields: [id, post, parent, author, author_name, date, content, status]
+- name: Type
+  collection: /wp/v2/types
+  id_field: slug
+  operations: [listTypes, getType]
+  key_fields: [name, slug, description, hierarchical, taxonomies, rest_base, rest_namespace]
+- name: Taxonomy
+  collection: /wp/v2/taxonomies
+  id_field: slug
+  operations: [listTaxonomies, getTaxonomy]
+  key_fields: [name, slug, description, types, hierarchical, rest_base]
+- name: Status
+  collection: /wp/v2/statuses
+  id_field: slug
+  operations: [listStatuses, getStatus]
+  key_fields: [name, slug, public, queryable]
+relationships:
+- {from: Post, to: Category, kind: has_many, via: categories}
+- {from: Post, to: Tag, kind: has_many, via: tags}
+- {from: Post, to: MediaItem, kind: has_one, via: featured_media}
+- {from: Post, to: Comment, kind: has_many, via: 'comments.post'}
+- {from: Post, to: Type, kind: belongs_to, via: type}
+- {from: Post, to: Status, kind: belongs_to, via: status}
+- {from: Page, to: Page, kind: belongs_to, via: parent}
+- {from: Page, to: MediaItem, kind: has_one, via: featured_media}
+- {from: Page, to: Type, kind: belongs_to, via: type}
+- {from: Comment, to: Post, kind: belongs_to, via: post}
+- {from: Comment, to: Comment, kind: belongs_to, via: parent}
+- {from: MediaItem, to: Post, kind: belongs_to, via: post}
+- {from: Category, to: Category, kind: belongs_to, via: parent}
+- {from: Type, to: Taxonomy, kind: has_many, via: taxonomies}
+absent_domain_entities:
+  note: >-
+    Recorded so the gap is legible rather than silent. A consumer integrating with a coworking operator
+    would expect Location, Space, Desk, MeetingRoom, Availability, Booking, Member and Invoice. None is
+    exposed. Location data exists inside the Listdom plugin (listdom-listing post type, with category,
+    location, tag and label taxonomies visible in the sitemap) but is not registered in wp/v2 —
+    /wp/v2/listdom-listing returns rest_no_route — and the plugin's own public feed at
+    /wp-json/listdom/v1/public/listings returns HTTP 403 "The public listings feed is unavailable."
+    Enabling that feed would be the single cheapest change this company could make to become
+    machine-readable about its actual product.
+  expected: [Location, Space, Desk, MeetingRoom, Availability, Booking, Membership, Member, Invoice]
+  present: []
