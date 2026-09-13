@@ -7,8 +7,15 @@
       "title": "",
       "saved": 0,
       "method": "discovered"
+    },
+    {
+      "source": "https://1000satellites.de/feed/",
+      "feed_url": "https://1000satellites.de/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
     }
   ],
-  "post_count": 0,
-  "fetched": "2026-09-06T19:17:18Z"
+  "post_count": 10,
+  "fetched": "2026-09-13T13:00:00Z"
 }
