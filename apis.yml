@@ -23,9 +23,9 @@ created: '2026-09-05'
 modified: '2026-09-05'
 tags:
 - Company
-- Coworking
-- Flexible Workspace
-- Real Estate
+- Co-Working
+- Flex Office
+- Real-Estate
 - Office Space
 - Workplace
 - Meeting Rooms
@@ -48,14 +48,13 @@ apis:
   name: 1000 Satellites MCP Server (WordPress MCP Adapter)
   description: >-
     A remote Model Context Protocol server served from the 1000satellites.de WordPress estate under the
-    "mcp" REST namespace. Two MCP routes are advertised in the route index — mcp-oauth-server and
-    mcp-adapter-default-server — and the apex domain publishes both RFC 8414 OAuth authorization-server
-    metadata and RFC 9728 protected-resource metadata naming mcp-oauth-server as the protected resource.
-    Authorization is OAuth 2.1 authorization-code with PKCE (S256), a single `mcp` scope, public clients
-    (token_endpoint_auth_method none) and client-ID metadata documents. The live tool set could not be
-    enumerated: an anonymous JSON-RPC initialize and tools/list both return HTTP 401 (mcp_unauthorized on
-    the OAuth server, rest_forbidden on the default adapter server), as does the companion
-    wp-abilities/v1 abilities registry that backs the tools.
+    "mcp" REST namespace. Two MCP routes are advertised in the route index — mcp-oauth-server and mcp-adapter-default-server
+    — and the apex domain publishes both RFC 8414 OAuth authorization-server metadata and RFC 9728 protected-resource
+    metadata naming mcp-oauth-server as the protected resource. Authorization is OAuth 2.1 authorization-code
+    with PKCE (S256), a single `mcp` scope, public clients (token_endpoint_auth_method none) and client-ID
+    metadata documents. The live tool set could not be enumerated: an anonymous JSON-RPC initialize and
+    tools/list both return HTTP 401 (mcp_unauthorized on the OAuth server, rest_forbidden on the default
+    adapter server), as does the companion wp-abilities/v1 abilities registry that backs the tools.
   humanURL: https://1000satellites.de/wp-json/mcp
   baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
   tags:
@@ -76,39 +75,146 @@ apis:
     http_status: 200
     tools_list_status: 401
     fetched: '2026-09-05'
-- aid: 1000satellitescoworking:content-api
-  name: 1000 Satellites Content API (WordPress REST wp/v2)
-  description: >-
-    The anonymously readable WordPress REST content surface of 1000satellites.de. Ten resources returned
-    HTTP 200 to an unauthenticated request on 2026-09-05 — posts, pages, media, categories, tags, comments,
-    types, taxonomies, statuses and site search — covering the company news feed, its location and
-    marketing pages and its media library, in both German and English (the site runs WPML). This is the
-    CMS content API, not a product API: 1000 Satellites publishes no OpenAPI of its own, and the OpenAPI
-    linked here was derived mechanically from the route-discovery document at /wp-json/. Write operations
-    exist on these routes but require WordPress authentication and are not documented.
-  humanURL: https://1000satellites.de/en/news/
-  baseURL: https://1000satellites.de/wp-json
+- aid: 1000satellitescoworking:1000satellitescoworking-categories-api
+  name: 1000 Satellites Categories API
+  description: Post categories.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
   tags:
-  - Content
-  - News
-  - Media
-  - Search
+  - Categories
   properties:
   - type: OpenAPI
-    url: openapi/1000satellitescoworking-content-api-openapi.yml
-  - type: Overlay
-    url: overlays/1000satellitescoworking-content-api-overlay.yaml
+    url: openapi/1000satellitescoworking-categories-api-openapi.yml
   - type: DataModel
     url: data-model/1000satellitescoworking-data-model.yml
   - type: ErrorCatalog
     url: errors/1000satellitescoworking-problem-types.yml
-  x-evidence:
-    route_index: https://1000satellites.de/wp-json
-    http_status: 200
-    fetched: '2026-09-05'
-    derived_note: >-
-      Derived from the provider's own route-discovery document; only resources verified to return 200
-      anonymously are included. x-provider-published is false in the spec's info block.
+- aid: 1000satellitescoworking:1000satellitescoworking-comments-api
+  name: 1000 Satellites Comments API
+  description: Comments on posts.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Comments
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-comments-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-media-api
+  name: 1000 Satellites Media API
+  description: Media library items (photography of the coworking locations, documents).
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-media-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-pages-api
+  name: 1000 Satellites Pages API
+  description: Marketing, location and legal pages of the 1000 Satellites site.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-pages-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-posts-api
+  name: 1000 Satellites Posts API
+  description: Blog posts and news articles published on 1000satellites.de.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-posts-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-search-api
+  name: 1000 Satellites Search API
+  description: Site-wide search across public content.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-search-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-statuses-api
+  name: 1000 Satellites Statuses API
+  description: Registered post statuses.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Statuses
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-statuses-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-tags-api
+  name: 1000 Satellites Tags API
+  description: Post tags.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-tags-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-taxonomies-api
+  name: 1000 Satellites Taxonomies API
+  description: Registered taxonomies on the site.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Taxonomies
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-taxonomies-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
+- aid: 1000satellitescoworking:1000satellitescoworking-types-api
+  name: 1000 Satellites Types API
+  description: Registered post types on the site.
+  humanURL: https://1000satellites.de/wp-json/mcp
+  baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
+  tags:
+  - Types
+  properties:
+  - type: OpenAPI
+    url: openapi/1000satellitescoworking-types-api-openapi.yml
+  - type: DataModel
+    url: data-model/1000satellitescoworking-data-model.yml
+  - type: ErrorCatalog
+    url: errors/1000satellitescoworking-problem-types.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
