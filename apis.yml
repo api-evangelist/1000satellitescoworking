@@ -165,6 +165,8 @@ apis:
   humanURL: https://1000satellites.de/wp-json/mcp
   baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
   tags:
+  - Status
+  tags_raw:
   - Statuses
   properties:
   - type: OpenAPI
@@ -193,6 +195,8 @@ apis:
   humanURL: https://1000satellites.de/wp-json/mcp
   baseURL: https://1000satellites.de/wp-json/mcp/mcp-oauth-server
   tags:
+  - taxonomies
+  tags_raw:
   - Taxonomies
   properties:
   - type: OpenAPI
