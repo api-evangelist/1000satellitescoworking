@@ -1,0 +1,38 @@
+{
+  "provider": "1000satellitescoworking",
+  "sources": [
+    "_original/1000satellitescoworking-content-api-openapi.yml"
+  ],
+  "outputs": [
+    "1000satellitescoworking-categories-api-openapi.yml",
+    "1000satellitescoworking-comments-api-openapi.yml",
+    "1000satellitescoworking-media-api-openapi.yml",
+    "1000satellitescoworking-pages-api-openapi.yml",
+    "1000satellitescoworking-posts-api-openapi.yml",
+    "1000satellitescoworking-search-api-openapi.yml",
+    "1000satellitescoworking-statuses-api-openapi.yml",
+    "1000satellitescoworking-tags-api-openapi.yml",
+    "1000satellitescoworking-taxonomies-api-openapi.yml",
+    "1000satellitescoworking-types-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "1000satellitescoworking-content-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "1000satellitescoworking-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-statuses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-tags-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-taxonomies-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "1000satellitescoworking-types-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

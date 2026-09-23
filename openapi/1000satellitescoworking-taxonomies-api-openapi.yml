@@ -1,0 +1,156 @@
+openapi: 3.2.0
+info:
+  title: 1000 Satellites Content API (WordPress REST wp/v2)…
+  version: wp/v2
+  summary: 'Public read surface of 1000satellites.de: news posts, location and marketing pages, media library, taxonomies and site search.'
+  description: 1000 Satellites publishes 1000satellites.de on WordPress, which exposes the WordPress REST API at https://1000satellites.de/wp-json/.
+  contact:
+    name: 1000 Satellites GmbH
+    url: https://1000satellites.de/kontakt/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://1000satellites.de/wp-json/
+  x-derived-on: '2026-09-05'
+  x-provider-published: false
+servers:
+- url: https://1000satellites.de/wp-json
+  description: Production
+tags:
+- name: Taxonomies
+  description: Registered taxonomies on the site.
+paths:
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List taxonomies
+      description: Registered taxonomies on the site.
+      tags:
+      - Taxonomies
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf Taxonomien begrenzen, die einem bestimmten Inhaltstyp zugeordnet sind.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of taxonomies. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomy
+      summary: Get a single taxonomy
+      description: Retrieve one item from the taxonomies collection by its unique identifier.
+      tags:
+      - Taxonomies
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Eine alphanumerische Kennung für die Taxonomie.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested taxonomy.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+components:
+  schemas:
+    WPError:
+      type: object
+      description: The error envelope returned by every WordPress REST API route. Observed live on 1000satellites.de on 2026-09-05.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_forbidden, rest_no_route, rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message. Localized — this site serves German (de-DE) by default.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+      required:
+      - code
+      - message
+  responses:
+    WPError:
+      description: WordPress REST API error envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WPError'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401

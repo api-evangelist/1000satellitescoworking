@@ -1,0 +1,309 @@
+openapi: 3.2.0
+info:
+  title: 1000 Satellites Content API (WordPress REST wp/v2) Comments…
+  version: wp/v2
+  summary: 'Public read surface of 1000satellites.de: news posts, location and marketing pages, media library, taxonomies and site search.'
+  description: 1000 Satellites publishes 1000satellites.de on WordPress, which exposes the WordPress REST API at https://1000satellites.de/wp-json/.
+  contact:
+    name: 1000 Satellites GmbH
+    url: https://1000satellites.de/kontakt/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://1000satellites.de/wp-json/
+  x-derived-on: '2026-09-05'
+  x-provider-published: false
+servers:
+- url: https://1000satellites.de/wp-json
+  description: Production
+tags:
+- name: Comments
+  description: Comments on posts.
+paths:
+  /wp/v2/comments:
+    get:
+      operationId: listComments
+      summary: List comments
+      description: Comments on posts.
+      tags:
+      - Comments
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Kommentare einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Ergebnissatz auf Kommentare begrenzen, denen bestimmte Benutzer-IDs zugewiesen sind. Erfordert eine Autorisierung.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz Kommentare ausschließt, die einer bestimmten Benutzer-ID zugewiesen sind. Erfordert eine Autorisierung.
+      - name: author_email
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Den Ergebnissatz auf den einer speziellen E-Mail-Adresse eines Autors begrenzen. Erfordert eine Autorisierung.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Kommentare einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - date
+          - date_gmt
+          - id
+          - include
+          - post
+          - parent
+          - type
+          default: date_gmt
+        description: Sammlung nach Kommentarattribut sortieren.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf Kommentare bestimmter übergeordneter IDs begrenzen.
+      - name: parent_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz bestimmte übergeordnete IDs ausschließt.
+      - name: post
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Kommentare begrenzen, die bestimmten Beitrags-IDs zugewiesen sind.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: approve
+        description: Ergebnissatz auf Kommentare begrenzen, denen ein bestimmter Status zugewiesen ist. Erfordert eine Autorisierung.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          default: comment
+        description: Ergebnissatz auf Kommentare begrenzen, denen ein bestimmter Typ zugewiesen ist. Erfordert eine Autorisierung.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den Beitrag, falls dieser passwortgeschützt ist.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of comments. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/comments/{id}:
+    get:
+      operationId: getComment
+      summary: Get a single comment
+      description: Retrieve one item from the comments collection by its unique identifier.
+      tags:
+      - Comments
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Kommentar.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den übergeordneten Beitrag des Kommentars (wenn der Beitrag passwortgeschützt ist).
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested comment.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+components:
+  schemas:
+    WPError:
+      type: object
+      description: The error envelope returned by every WordPress REST API route. Observed live on 1000satellites.de on 2026-09-05.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_forbidden, rest_no_route, rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message. Localized — this site serves German (de-DE) by default.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+      required:
+      - code
+      - message
+  responses:
+    WPError:
+      description: WordPress REST API error envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WPError'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401

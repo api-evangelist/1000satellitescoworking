@@ -1,0 +1,173 @@
+openapi: 3.2.0
+info:
+  title: 1000 Satellites Content API (WordPress REST wp/v2) Search…
+  version: wp/v2
+  summary: 'Public read surface of 1000satellites.de: news posts, location and marketing pages, media library, taxonomies and site search.'
+  description: 1000 Satellites publishes 1000satellites.de on WordPress, which exposes the WordPress REST API at https://1000satellites.de/wp-json/.
+  contact:
+    name: 1000 Satellites GmbH
+    url: https://1000satellites.de/kontakt/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://1000satellites.de/wp-json/
+  x-derived-on: '2026-09-05'
+  x-provider-published: false
+servers:
+- url: https://1000satellites.de/wp-json
+  description: Production
+tags:
+- name: Search
+  description: Site-wide search across public content.
+paths:
+  /wp/v2/search:
+    get:
+      operationId: searchSite
+      summary: Search the site
+      description: Site-wide search across public content.
+      tags:
+      - Search
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+        description: Ergebnisse auf Elemente eines Objekt-Typs beschränken.
+      - name: subtype
+        in: query
+        required: false
+        schema:
+          type: array
+          default: any
+          items:
+            type: string
+            enum:
+            - post
+            - page
+            - elementskit_content
+            - elementskit_template
+            - category
+            - post_tag
+            - any
+        description: Ergebnisse auf einen oder mehrere Objekt-Subtypen einschränken.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of search. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+components:
+  schemas:
+    WPError:
+      type: object
+      description: The error envelope returned by every WordPress REST API route. Observed live on 1000satellites.de on 2026-09-05.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_forbidden, rest_no_route, rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message. Localized — this site serves German (de-DE) by default.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+      required:
+      - code
+      - message
+  responses:
+    WPError:
+      description: WordPress REST API error envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WPError'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401

@@ -1,3 +1,5 @@
+# x-archived-from: 1000satellitescoworking-content-api-openapi.yml
+# x-archived-on: 2026-09-16
 openapi: 3.1.0
 info:
   title: 1000 Satellites Content API (WordPress REST wp/v2)

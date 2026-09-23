@@ -1,0 +1,356 @@
+openapi: 3.2.0
+info:
+  title: 1000 Satellites Content API (WordPress REST wp/v2) Pages API
+  version: wp/v2
+  summary: 'Public read surface of 1000satellites.de: news posts, location and marketing pages, media library, taxonomies and site search.'
+  description: 1000 Satellites publishes 1000satellites.de on WordPress, which exposes the WordPress REST API at https://1000satellites.de/wp-json/.
+  contact:
+    name: 1000 Satellites GmbH
+    url: https://1000satellites.de/kontakt/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-derived-from: https://1000satellites.de/wp-json/
+  x-derived-on: '2026-09-05'
+  x-provider-published: false
+servers:
+- url: https://1000satellites.de/wp-json
+  description: Production
+tags:
+- name: Pages
+  description: Marketing, location and legal pages of the 1000 Satellites site.
+paths:
+  /wp/v2/pages:
+    get:
+      operationId: listPages
+      summary: List pages
+      description: Marketing, location and legal pages of the 1000 Satellites site.
+      tags:
+      - Pages
+      parameters:
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          minimum: 1
+        description: Aktuelle Seite der Sammlung.
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 100
+        description: Maximale Anzahl der im Ergebnissatz zurückzugebenden Elemente.
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Ergebnisse auf alle begrenzen, die mit einer Zeichenfolge übereinstimmen.
+      - name: after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_after
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die nach einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: author
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die bestimmten Autoren zugewiesen sind.
+      - name: author_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Sicherstellen, dass der Ergebnissatz Beiträge ausschließt, die bestimmten Autoren zugewiesen sind.
+      - name: before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum veröffentlicht wurden.
+      - name: modified_before
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Antwort auf Beiträge einschränken, die vor einem bestimmten ISO8601-konformen Datum geändert wurden.
+      - name: exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Stelle sicher, dass der Ergebnissatz bestimmte IDs ausschließt.
+      - name: include
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Ergebnissatz auf bestimmte IDs begrenzen.
+      - name: menu_order
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Ergebnissatz auf Beiträge begrenzen, die einen bestimmten menu_order-Wert haben.
+      - name: search_semantics
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - exact
+        description: Wie man Suchbegriffe interpretiert.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Den Ergebnissatz um eine bestimmte Anzahl von Elementen verschieben.
+      - name: order
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Das Sortierattribut aufsteigend oder absteigend sortieren.
+      - name: orderby
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - menu_order
+          default: date
+        description: Sammlung nach Beitragsattribut sortieren.
+      - name: parent
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente bestimmter übergeordneter IDs begrenzen.
+      - name: parent_exclude
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: integer
+        description: Den Ergebnissatz auf alle Elemente begrenzen, außer denen mit einer bestimmten übergeordneten ID.
+      - name: search_columns
+        in: query
+        required: false
+        schema:
+          type: array
+          default: []
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+        description: Array mit den zu durchsuchenden Spaltennamen.
+      - name: slug
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+        description: Ergebnissatz auf Beiträge mit einer oder mehreren bestimmten Titelformen begrenzen.
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: array
+          default: publish
+          items:
+            type: string
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - any
+        description: Ergebnissatz auf Beiträge begrenzen, denen ein oder mehrere Status zugewiesen sind.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: A page of pages. Total count is returned in the X-WP-Total header and page count in X-WP-TotalPages.
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+        '400':
+          $ref: '#/components/responses/WPError'
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+  /wp/v2/pages/{id}:
+    get:
+      operationId: getPage
+      summary: Get a single page
+      description: Retrieve one item from the pages collection by its unique identifier.
+      tags:
+      - Pages
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Eindeutige Kennung für den Beitrag.
+      - name: context
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Geltungsbereich, unter dem die Anfrage erfolgt; bestimmt die in der Antwort vorhandenen Felder.
+      - name: excerpt_length
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Setzt die Standardlänge des Textauszugs außer Kraft.
+      - name: password
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Das Passwort für den Beitrag, falls dieser passwortgeschützt ist.
+      - name: wpml_language
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - en
+          - de
+        description: WPML's language code
+      responses:
+        '200':
+          description: The requested page.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/WPError'
+        '404':
+          $ref: '#/components/responses/WPError'
+components:
+  schemas:
+    WPError:
+      type: object
+      description: The error envelope returned by every WordPress REST API route. Observed live on 1000satellites.de on 2026-09-05.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_forbidden, rest_no_route, rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable message. Localized — this site serves German (de-DE) by default.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+      required:
+      - code
+      - message
+  responses:
+    WPError:
+      description: WordPress REST API error envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WPError'
+          example:
+            code: rest_forbidden
+            message: Sorry, you are not allowed to do that.
+            data:
+              status: 401
