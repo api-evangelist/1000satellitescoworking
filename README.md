@@ -1,4 +1,4 @@
-# 1000satellitescoworking
+# 1000 Satellites
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,5 +64,117 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-1000satellitescoworking is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://equityzen.com/company/1000satellitescoworking
+1000 Satellites GmbH is a German flex-office and coworking operator founded in 2019 in Mannheim by Caro Windlin, Markus Hummelsberger and Gregory von Abendroth as a spin-off of BASF's innovation unit Chemovator. It converts underused office space from corporate real-estate portfolios into professionally operated, decentralised "satellite" workspaces across the Rhein-Neckar region, Munich, Hamburg and Berlin, selling day passes, monthly memberships, team tickets, fixed desks, meeting rooms and event space rather than a software product. It is not a software vendor and publishes no product or developer API. Its machine-readable surface is what the company's WordPress estate exposes on 1000satellites.de: an anonymously readable WordPress REST content API (wp/v2) serving news posts, location and marketing pages, media and site search; and — notably for a business of this kind — a live remote Model Context Protocol server published through the WordPress MCP Adapter, advertised by real RFC 8414 OAuth authorization-server metadata and RFC 9728 protected-resource metadata, with tools/list authentication-gated.
+
+**Areas:** Company · Co-Working · Flex Office · Real Estate · Office Space · Workplace · Meeting Rooms · Germany · Content · MCP
+
+## 1000 Satellites on APIs.io
+
+Everything profiled for 1000 Satellites is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/1000satellitescoworking/](https://apis.io/providers/1000satellitescoworking/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [1000 Satellites MCP Server (WordPress MCP Adapter)](https://apis.io/apis/1000satellitescoworking/mcp/) — A remote Model Context Protocol server served from the 1000satellites.de WordPress estate under the "mcp" REST namespace. Two MCP routes are advertised in…
+- [1000 Satellites Website (WordPress REST)](https://apis.io/apis/1000satellitescoworking/1000satellites-de-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the 1000 Satellites website at 1000satellites.de: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [1000satellites](https://apis.io/servers/1000satellitescoworking/1000satellites/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [1000Satellitescoworking Authentication](https://apis.io/security/1000satellitescoworking/1000satellitescoworking-authentication/)
+- [1000Satellitescoworking Domain Security](https://apis.io/security/1000satellitescoworking/1000satellitescoworking-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [1000Satellitescoworking Scopes](https://apis.io/scopes/1000satellitescoworking/1000satellitescoworking-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [1000Satellitescoworking Plans Pricing](https://apis.io/plans/1000satellitescoworking/1000satellitescoworking-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [1000Satellitescoworking Rate Limits](https://apis.io/rate-limits/1000satellitescoworking/1000satellitescoworking-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://1000satellites.de/)
+- [Pricing](https://1000satellites.de/preise)
+- [Sign up](https://1000satellites.de/buchung/)
+- [Support](https://1000satellites.de/kontakt/)
+- [Blog](https://1000satellites.de/en/news/)
+- [Terms of service](https://1000satellites.de/agb/)
+- [Privacy policy](https://1000satellites.de/datenschutz/)
+
+## API Evangelist rating
+
+**Kin Score 32.4** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 60.0 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 76.3 |
+
+**Agent readiness 22.8** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 34.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/1000satellitescoworking/](https://apis.io/providers/1000satellitescoworking/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for 1000 Satellites: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/1000satellitescoworking/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
